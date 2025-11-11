@@ -4,6 +4,7 @@ from clients.user_client import UserClient
 from helpers import generate_random_string
 from data import *
 
+
 @allure.epic("User Management")
 @allure.feature("Create User")
 class TestUser:
@@ -20,11 +21,11 @@ class TestUser:
         with allure.step("Отправка запроса на создание уникального пользователя"):
             response = c.create_user(email=email, password=password, name=name)
             r_json = response.json()
-        
+
         with allure.step("Проверка кода ответа и тела: 200 и 'success: true'"):
             assert response.status_code == 200
             assert r_json["success"] == True
-        
+
         with allure.step("Проверка наличия токена доступа"):
             assert "accessToken" in r_json
             assert r_json["accessToken"] is not ""
@@ -47,14 +48,14 @@ class TestUser:
         with allure.step("Отправка второго (дублирующего) запроса на создание пользователя"):
             response2 = c.create_user(email=email, password=password, name=name)
             r_json = response2.json()
-        
+
         with allure.step("Проверка кода ответа и тела: 403 Forbidden"):
             assert response2.status_code == 403
             assert r_json["success"] == False
-        
+
         with allure.step("Проверка сообщения об ошибке: 'User already exists'"):
-            assert r_json["message"] == "User already exists"
-        
+            assert r_json["message"] == Message.USER_ALREADY_EXISTS
+
         if token1:
             with allure.step("Post-condition: Удаление тестового пользователя"):
                 c.delete_user(token1)
@@ -71,10 +72,10 @@ class TestUser:
         with allure.step(f"Отправка запроса на создание пользователя"):
             response = c.create_user(email=email, password=password, name=name)
             r_json = response.json()
-        
+
         with allure.step("Проверка кода ответа и тела: 403 Forbidden"):
             assert response.status_code == 403
             assert r_json["success"] == False
-        
+
         with allure.step("Проверка сообщения об ошибке: 'Email, password and name are required fields'"):
-            assert r_json["message"] == "Email, password and name are required fields"
+            assert r_json["message"] == Message.REQUIRED_FIELDS_MISSED

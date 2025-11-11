@@ -2,6 +2,8 @@ import pytest
 import allure
 from clients.user_client import UserClient
 from helpers import generate_random_string
+from data import Message
+
 
 @allure.epic("User Management")
 @allure.feature("Login User")
@@ -31,14 +33,14 @@ class TestLogin:
             password = generate_random_string(10)
 
         c = UserClient()
-        
+
         with allure.step("Отправка запроса на логин с неверными данными"):
             response = c.login_user(email=email, password=password)
-        
+
         with allure.step("Проверка кода ответа: 401 Unauthorized"):
             assert response.status_code == 401
-        
+
         with allure.step("Проверка сообщения об ошибке"):
             r_json = response.json()
             assert r_json["success"] == False
-            assert r_json["message"] == "email or password are incorrect"
+            assert r_json["message"] == Message.INCORRECT_EMAIL_PASSWORD
