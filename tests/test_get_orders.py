@@ -15,8 +15,7 @@ class TestGetUserOrders:
 
         with allure.step("Pre-condition: Создание заказа, чтобы список не был пустым"):
             payload = [ingredients_list[0], ingredients_list[1]]
-            create_response = c.create_order(payload, user["token"])
-            assert create_response.status_code == 200, "Не удалось создать заказ для теста"
+            c.create_order(payload, user["token"])
 
         with allure.step("Отправка запроса на получение заказов пользователя"):
             response = c.get_user_orders(user["token"])

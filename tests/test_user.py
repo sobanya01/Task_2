@@ -56,9 +56,8 @@ class TestUser:
         with allure.step("Проверка сообщения об ошибке: 'User already exists'"):
             assert r_json["message"] == Message.USER_ALREADY_EXISTS
 
-        if token1:
-            with allure.step("Post-condition: Удаление тестового пользователя"):
-                c.delete_user(token1)
+        with allure.step("Post-condition: Удаление тестового пользователя"):
+            c.delete_user(token1)
 
     @allure.title("Создание пользователя без одного из обязательных полей (провал)")
     @allure.description("Параметризованный тест: проверяем 403, если отсутствует email, password или name.")
